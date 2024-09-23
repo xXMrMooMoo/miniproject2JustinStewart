@@ -32,19 +32,31 @@ def main():
     #   This creates a df that only returns the rows in which stress is high.
     #   If df['Stress_Level' == 'High'] == True, then that row is added to high_stress_df.
 
-    high_stress_male_df = df.loc[(df['Stress_Level'] == 'High') & (df['Gender'] == 'Male') & (df['Hours_Worked_Per_Week'].between(30,40, inclusive='both'))]
-    medium_stress_male_df = df.loc[(df['Stress_Level'] == 'Medium') & (df['Gender'] == 'Male') & (df['Hours_Worked_Per_Week'].between(30,40, inclusive='both'))]
-    low_stress_male_df = df.loc[(df['Stress_Level'] == 'Low') & (df['Gender'] == 'Male') & (df['Hours_Worked_Per_Week'].between(30,40, inclusive='both'))]
+    stress_levels = ['High', 'Medium', 'Low']
+    genders = ['Male', 'Female', 'Non-binary']
+    colors = ['Red', 'Orange', 'Blue']
 
-    high_stress_female_df = df.loc[(df['Stress_Level'] == 'High') & (df['Gender'] == 'Female') & (df['Hours_Worked_Per_Week'].between(30,40, inclusive='both'))]
-    medium_stress_female_df = df.loc[(df['Stress_Level'] == 'Medium') & (df['Gender'] == 'Female') & (df['Hours_Worked_Per_Week'].between(30,40, inclusive='both'))]
-    low_stress_female_df = df.loc[(df['Stress_Level'] == 'Low') & (df['Gender'] == 'Female') & (df['Hours_Worked_Per_Week'].between(30,40, inclusive='both'))]
+    #   looping thru stress levels, gender, and colors to create bar graphs based on hours worked and stress level
+    #   by gender.
+    for stress, color in zip(stress_levels, colors):
+        for gender in genders:
+            filtered_df = df.loc[
+                (df['Stress_Level'] == stress) &
+                (df['Gender'] == gender) &
+                (df['Hours_Worked_Per_Week'].between(30,40, inclusive='both'))
+            ]
+            plotGraphBasedonHours(filtered_df, color, stress, gender)
 
-    high_stress_nonb_df = df.loc[(df['Stress_Level'] == 'High') & (df['Gender'] == 'Non-Binary') & (df['Hours_Worked_Per_Week'].between(30,40, inclusive='both'))]
-    medium_stress_nonb_df = df.loc[(df['Stress_Level'] == 'Medium') & (df['Gender'] == 'Non-Binary') & (df['Hours_Worked_Per_Week'].between(30,40, inclusive='both'))]
-    low_stress_nonb_df = df.loc[(df['Stress_Level'] == 'Low') & (df['Gender'] == 'Non-Binary') & (df['Hours_Worked_Per_Week'].between(30,40, inclusive='both'))]
+#   function to plot and save the bar graph
+def plotGraphBasedonHours(df, barColor, stressType, gender):
+    count_by_hours = df['Hours_Worked_Per_Week'].value_counts().sort_index()
 
-
+    plt.bar(count_by_hours.index, count_by_hours.values, color=barColor)
+    plt.xlabel('Hours Worked Per Week')
+    plt.ylabel(f'Count of {stressType} stress')
+    plt.title(f'Count of {stressType} stress {gender} Working 30-40 Hours Per Week')
+    plt.xticks(range(30,41))
+    plt.show()
 
 
 if __name__ == '__main__':

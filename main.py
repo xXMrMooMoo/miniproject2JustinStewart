@@ -20,11 +20,31 @@
 
 import pandas as pd
 import os
+import matplotlib.pyplot as plt
+from fontTools.misc.arrayTools import pointInRect
+
 
 def main():
-    csvfile = "remote_worker_data.csv"
-    df = pd.read_csv(csvfile)
-    print(df)
+    csvfile = "Impact_of_Remote_Work_on_Mental_Health.csv"
+    df = pd.read_csv(csvfile, index_col=0)
+
+    #   Filtering df down to df's that are split by stress level.
+    #   This creates a df that only returns the rows in which stress is high.
+    #   If df['Stress_Level' == 'High'] == True, then that row is added to high_stress_df.
+
+    high_stress_male_df = df.loc[(df['Stress_Level'] == 'High') & (df['Gender'] == 'Male') & (df['Hours_Worked_Per_Week'].between(30,40, inclusive='both'))]
+    medium_stress_male_df = df.loc[(df['Stress_Level'] == 'Medium') & (df['Gender'] == 'Male') & (df['Hours_Worked_Per_Week'].between(30,40, inclusive='both'))]
+    low_stress_male_df = df.loc[(df['Stress_Level'] == 'Low') & (df['Gender'] == 'Male') & (df['Hours_Worked_Per_Week'].between(30,40, inclusive='both'))]
+
+    high_stress_female_df = df.loc[(df['Stress_Level'] == 'High') & (df['Gender'] == 'Female') & (df['Hours_Worked_Per_Week'].between(30,40, inclusive='both'))]
+    medium_stress_female_df = df.loc[(df['Stress_Level'] == 'Medium') & (df['Gender'] == 'Female') & (df['Hours_Worked_Per_Week'].between(30,40, inclusive='both'))]
+    low_stress_female_df = df.loc[(df['Stress_Level'] == 'Low') & (df['Gender'] == 'Female') & (df['Hours_Worked_Per_Week'].between(30,40, inclusive='both'))]
+
+    high_stress_nonb_df = df.loc[(df['Stress_Level'] == 'High') & (df['Gender'] == 'Non-Binary') & (df['Hours_Worked_Per_Week'].between(30,40, inclusive='both'))]
+    medium_stress_nonb_df = df.loc[(df['Stress_Level'] == 'Medium') & (df['Gender'] == 'Non-Binary') & (df['Hours_Worked_Per_Week'].between(30,40, inclusive='both'))]
+    low_stress_nonb_df = df.loc[(df['Stress_Level'] == 'Low') & (df['Gender'] == 'Non-Binary') & (df['Hours_Worked_Per_Week'].between(30,40, inclusive='both'))]
+
+
 
 
 if __name__ == '__main__':

@@ -2,8 +2,6 @@
 ### Justin Stewart
 ### Mini Project 2
 
-
-
 #(5/5 points) Initial comments with your name, class and project at the top of your .py file.
 #(5/5 points) Proper import of packages used.
 #(20/20 points) Using a data source of your choice, such as data from data.gov or using the Faker package, generate or retrieve some data for creating basic statistics on. This will generally come in as json data, etc.
@@ -21,22 +19,19 @@
 import pandas as pd
 import os
 import matplotlib.pyplot as plt
-from fontTools.misc.arrayTools import pointInRect
-
 
 def main():
     csvfile = "Impact_of_Remote_Work_on_Mental_Health.csv"
     df = pd.read_csv(csvfile, index_col=0)
 
-    #   Filtering df down to df's that are split by stress level.
-    #   This creates a df that only returns the rows in which stress is high.
-    #   If df['Stress_Level' == 'High'] == True, then that row is added to high_stress_df.
+    create_chart_folder()
 
+    #   lists to iterate through
     stress_levels = ['High', 'Medium', 'Low']
     genders = ['Male', 'Female', 'Non-binary']
     colors = ['Red', 'Orange', 'Blue']
 
-    #   looping thru stress levels, gender, and colors to create bar graphs based on hours worked and stress level
+    #   looping through stress levels, gender, and colors to create bar graphs based on hours worked and stress level
     #   by gender.
     for stress, color in zip(stress_levels, colors):
         for gender in genders:
@@ -45,10 +40,10 @@ def main():
                 (df['Gender'] == gender) &
                 (df['Hours_Worked_Per_Week'].between(30,40, inclusive='both'))
             ]
-            plotGraphBasedonHours(filtered_df, color, stress, gender)
+            plot_graph_based_on_hours(filtered_df, color, stress, gender)
 
 #   function to plot and save the bar graph
-def plotGraphBasedonHours(df, barColor, stressType, gender):
+def plot_graph_based_on_hours(df, barColor, stressType, gender):
     count_by_hours = df['Hours_Worked_Per_Week'].value_counts().sort_index()
 
     plt.bar(count_by_hours.index, count_by_hours.values, color=barColor)
@@ -56,12 +51,14 @@ def plotGraphBasedonHours(df, barColor, stressType, gender):
     plt.ylabel(f'Count of {stressType} stress')
     plt.title(f'Count of {stressType} stress {gender} Working 30-40 Hours Per Week')
     plt.xticks(range(30,41))
+
+    plt.savefig(f'charts/{stressType}_Stress_{gender}.png')
     plt.show()
 
+def create_chart_folder():
+    if not os.path.exists("charts"):
+        os.mkdir("charts")
 
 if __name__ == '__main__':
     main()
 
-def createChartFolder():
-    if os.path.exists("charts") == False:
-        os.mkdir("charts")

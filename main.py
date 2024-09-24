@@ -24,6 +24,7 @@ def main():
     csvfile = "Impact_of_Remote_Work_on_Mental_Health.csv"
     df = pd.read_csv(csvfile, index_col=0)
 
+    #   creating charts folder
     create_chart_folder()
 
     #   lists to iterate through
@@ -42,15 +43,24 @@ def main():
             ]
             plot_graph_based_on_hours(filtered_df, color, stress, gender)
 
-#   function to plot and save the bar graph
+#   function to plot and save the bar graph, name is created based on passed variables.
 def plot_graph_based_on_hours(df, barColor, stressType, gender):
     count_by_hours = df['Hours_Worked_Per_Week'].value_counts().sort_index()
 
-    plt.bar(count_by_hours.index, count_by_hours.values, color=barColor)
+    #   setting and formatting the bar graphs
+    plt.bar(count_by_hours.index, count_by_hours.values, color=barColor, edgecolor='black', linewidth=1.5)
+
+    #   Labeling the graph
     plt.xlabel('Hours Worked Per Week')
     plt.ylabel(f'Count of {stressType} stress')
     plt.title(f'Count of {stressType} stress {gender} Working 30-40 Hours Per Week')
+
+    #   alternate way to set plt.axis (x-axis range)
     plt.xticks(range(30,41))
+
+    # Set the background color to light grey
+    plt.gcf().set_facecolor('#A9A9A9')  # Set the figure background
+    plt.gca().set_facecolor('#808080')  # Set the axes background
 
     plt.savefig(f'charts/{stressType}_Stress_{gender}.png')
     plt.show()
